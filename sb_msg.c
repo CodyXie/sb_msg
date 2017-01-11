@@ -90,7 +90,6 @@ int sb_send_message(SB_MSG *msg)
 
 	if (queue == -1 || queue == 0) {
 		logw("Forget to init queue for %s", modname[msg->dest]);
-		sb_free_message(&msg);
 		return -1;
 	}
 
@@ -110,13 +109,13 @@ int sb_send_message(SB_MSG *msg)
 	}
 
 	SB_FREE(SysMsg);
-	SB_FREE(msg);
 
 	return ret;
 }
 
 int sb_send_message_ext(int src, int dest,int msg_id, void *data, int size)
 {
+	int ret = -1;
 	SB_MSG *pmsg = (SB_MSG *)SB_MALLOC(sizeof(SB_MSG) + size - 1);
 
 	if (pmsg == NULL) {
@@ -132,7 +131,11 @@ int sb_send_message_ext(int src, int dest,int msg_id, void *data, int size)
 		SB_MEMCPY(pmsg->para, size, data, size, size);
 	}
 
-	return sb_send_message(pmsg);
+	ret = sb_send_message(pmsg);
+
+	SB_FREE(pmsg);
+
+	return ret;
 }
 
 SB_MSG* sb_get_message(int queue, int msgflg, int * result)
@@ -142,6 +145,7 @@ SB_MSG* sb_get_message(int queue, int msgflg, int * result)
 	int ret;
 
 	sys_msg = (SYS_MSG *)SB_MALLOC(sizeof(SYS_MSG) + MAX_MSG_LEN);
+	logi("sb_get_message msg %p sys_msg %p", sys_msg->pmsg, sys_msg);
 	SB_MEMSET(sys_msg, 0, sizeof(SYS_MSG) + MAX_MSG_LEN);
 	sys_msg->mtype = 1;
 	ret = msgrcv(queue, sys_msg, MAX_MSG_LEN, 0,  msgflg);
@@ -168,7 +172,7 @@ int sb_free_message(SB_MSG **msg)
 		return -1;
 
 	SYS_MSG *smsg = container_of(*msg, SYS_MSG, pmsg);
-	logi("sb_free_message %p sys_msg %p", *msg, smsg);
+	logi("sb_free_message msg %p sys_msg %p", *msg, smsg);
 	if (smsg)
 		SB_FREE(smsg);
 	*msg = NULL;
