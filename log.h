@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define PRIVATE_LOG_WRAPPER
+//#define PRIVATE_LOG_WRAPPER
 #ifndef PRIVATE_LOG_WRAPPER
 #include <syslog.h>
 #else
