@@ -15,7 +15,7 @@ void logi(const char *format, ...)
 	va_list ap;
 	va_start(ap, format);
 #ifndef PRIVATE_LOG_WRAPPER
-	vsyslog(priority, format, ap);
+	vsyslog(LOG_INFO, format, ap);
 #else
 	fprintf(stderr, "[I] ");
 	vfprintf(stderr, format, ap);
