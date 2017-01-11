@@ -146,8 +146,10 @@ int main(int argc, char** argv)
 	}
 
 	if (flag == 'c') {
+		init_log_wrapper("alinkd_commander");
 		alink_main(argc, argv);
 	} else if (flag == 'h') {
+		init_log_wrapper("alinkd_handler");
 		alink_handler(argc, argv);
 	}
 
@@ -208,8 +210,6 @@ static int alink_main(int argc, char **argv)
 		"-h",
 		NULL
 	};
-
-	init_log_wrapper("alinkd");
 
 	msgqid = sb_create_queue(SB_MOD_CONTROL);
 	if (msgqid < 0) {
