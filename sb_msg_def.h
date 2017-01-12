@@ -48,7 +48,7 @@ typedef struct
     int msg_id;
     int dest;
     char para[1];
-} SB_MSG;
+} SB_MSG __attribute__((packed));
 
 #define MSG_GET_NO_WAIT			IPC_NOWAIT
 #define MSG_GET_WAIT_FOREVER		0

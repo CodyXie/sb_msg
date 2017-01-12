@@ -21,7 +21,7 @@
 typedef struct{
 	long mtype;
 	char pmsg[1];
-}SYS_MSG;
+}SYS_MSG __attribute__((packed));
 
 char *modname[] = {
 	"none",
